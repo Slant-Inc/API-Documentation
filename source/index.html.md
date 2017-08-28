@@ -137,13 +137,29 @@ password | The password provided by the user.
 <aside class="success">This is the "standard" login method used by Slant. If you are building your own application, you should use this when possible.</aside>
 
 
+# Roles
+
+User accounts may be granted one of two roles when authorized for a location:
+
+### Member
+
+Members are granted access to basic location information including stats and reviews.  They cannot view or modify location settings such as review accounts, members or SMS settings.  Members may send review invitations.
+
+This is the recommended role for most employees at a business.
+
+### Admin
+
+Admins are granted total administrative control over a location. They may view and modify all location settings, including review accounts, membership and SMS settings.
+
+Business owners are automatically given admin access when they create a Slant account.  They may also choose to grant admin access to other managers or trusted employees.
+
 # Users
 
 ## Get the current user
 
 ```shell
 curl "https://api.slantreviews.com/v2/users/me"
-  -H "Authorization: USER_TOKEN_HERE"
+    -H "Authorization: USER_TOKEN_HERE"
 ```
 
 > The above command returns JSON structured like this:
@@ -193,7 +209,7 @@ Authorization | The user's access token.
 
 ```shell
 curl "https://api.slantreviews.com/v2/users/:user_id"
-  -H "Authorization: ACCESS_TOKEN_HERE"
+    -H "Authorization: ACCESS_TOKEN_HERE"
 ```
 
 > The above command returns JSON structured like this:
@@ -237,4 +253,194 @@ Parameter | Description
 --------- | -----------
 user_id | The user's ID.
 
+
+# Companies
+
+In Slant, a `Company` represents a business entity which contains one or more [Locations](#locations).  This heirarchy makes it easy to represent multiple real-world business locations that operate under the same brand.
+
+Only partner service accounts may create, modify or delete companies.
+
+
+# Locations
+
+In Slant, a `Location` represents a single physical business location. Every location operates under a parent [Company](#companies).
+
+If a business contains more than one physical storefront, it is recommended that each storefront be represented in Slant as its own Location. This is a rule imposed by many review platforms, so following the same pattern in Slant ensures that our system can collect reviews accurately.
+
+Only partner service accounts may create, modify or delete locations.
+
+
+# Stats
+
+## Get review stats for a location
+
+```shell
+curl "https://api.slantreviews.com/v2/locations/:location_id/stats"
+    -H "Authorization: ACCESS_TOKEN_HERE"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "TODO": "DISPLAY EXAMPLE RESPONSE HERE"
+}
+```
+
+This endpoint retrieves basic review statistics for a specific location.
+
+Accessible to user accounts where the user is authorized as a member or admin of this location. Accessible to service accounts.
+
+### HTTP request
+
+`GET https://'api.slantreviews.com/v2/locations/:location_id/stats`
+
+### Request parameters
+
+Parameter | Description
+--------- | -----------
+location_id | The location's ID.
+
+
+# Reviews
+
+## Get reviews for a location
+
+```shell
+curl "https://api.slantreviews.com/v2/locations/:location_id/reviews"
+    -H "Authorization: ACCESS_TOKEN_HERE"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "TODO": "DISPLAY EXAMPLE RESPONSE HERE"
+}
+```
+
+This endpoint retrieves an array of all online reviews for a location.
+
+Accessible to user accounts where the user is authorized as a member or admin of this location. Accessible to service accounts.
+
+### HTTP request
+
+`GET https://'api.slantreviews.com/v2/locations/:location_id/reviews`
+
+### Request parameters
+
+Parameter | Description
+--------- | -----------
+location_id | The location's ID.
+
+
+# Members
+
+## Get members for a location
+
+```shell
+curl "https://api.slantreviews.com/v2/locations/:location_id/members"
+    -H "Authorization: ACCESS_TOKEN_HERE"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "TODO": "DISPLAY EXAMPLE RESPONSE HERE"
+}
+```
+
+This endpoint retrieves an array of all members and admins who are authorized for a specific location.
+
+Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.
+
+### HTTP request
+
+`GET https://'api.slantreviews.com/v2/locations/:location_id/members`
+
+### Request parameters
+
+Parameter | Description
+--------- | -----------
+location_id | The location's ID.
+
+## Add a new member to a location
+
+```shell
+curl "https://api.slantreviews.com/v2/locations/:location_id/members"
+    -X POST
+    -d '{"first_name": "FIRST_NAME", "last_name": "LAST_NAME", "email": "EMAIL", "role": "ROLE"}'
+    -H "Authorization: ACCESS_TOKEN_HERE"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "TODO": "DISPLAY EXAMPLE RESPONSE HERE"
+}
+```
+
+This endpoint authorizes a new user to be a member or admin of a location.
+
+When this request is submitted, it is first determined whether a user with the provided email address already exists in the Slant system. If the user already has an account, then they are granted access to this location with the provided role.
+
+If the user does not yet exist, a new account is created automatically and granted access to this location.  A confirmation email is sent to the provided address, which will allow the user to confirm their address, set a password and log in.
+
+Changing a user account's own role is not allowed.
+
+### HTTP request
+
+`POST https://api.slantreviews.com/v2/locations/:location_id/members`
+
+### Request parameters
+
+Parameter | Description
+--------- | -----------
+location_id | The location's ID.
+
+### Body Parameters
+
+Parameter | Description
+--------- | -----------
+first_name | The user's first name.
+last_name | (Optional) The user's last name.
+email | The user's email address.
+role | A valid role to assign the user. Either "admin" or "member". See [Roles](#roles).
+
+<aside class="notice">This endpoint will also change a user's current role if needed.</aside>
+
+## Delete a member from a location
+
+```shell
+curl "https://api.slantreviews.com/v2/locations/:location_id/members"
+    -X DELETE
+    -H "Authorization: ACCESS_TOKEN_HERE"
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "TODO": "DISPLAY EXAMPLE RESPONSE HERE"
+}
+```
+
+This endpoint revokes a user's role (as a member or admin) from a location.
+
+Attempting to revoke a user account's own role is not allowed.
+
+### HTTP request
+
+`DELETE https://api.slantreviews.com/v2/locations/:location_id/members/:user_id`
+
+### Request parameters
+
+Parameter | Description
+--------- | -----------
+location_id | The location's ID.
+user_id | The ID of the user to remove.
+
+<aside class="notice">This endpoint will not delete a user account entirely. It only revokes permission for the specified location.</aside>
 
