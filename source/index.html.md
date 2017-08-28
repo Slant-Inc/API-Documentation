@@ -1,15 +1,11 @@
 ---
-title: API Reference
+title: Slant API Documentation
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
-  - ruby
-  - python
-  - javascript
+- shell: cURL
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
   - errors
@@ -19,221 +15,226 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Slant API!  This API is organized around REST, and you can use it to access all client- and partner-related data.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+> Important: For the sake of brevity, the `Content-Type` header will be omitted from this documentation. However, since JSON is used throughout the API, all requests must contain this header:
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+```shell
+-H "Content-Type: application/json"
+```
+
+
+HTTPS must be used for all endpoints, and any unsecured (HTTP) requests will be rejected. Every endpoint in the API accepts and returns JSON, including errors. You can view code examples in the area to the right.
 
 # Authentication
 
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
+> Request authentication - applies to all API endpoints:
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+curl "https://api.slantreviews.com/v2/example"
+    -H "Authorization: YOUR_TOKEN_HERE"
 ```
 
-```javascript
-const kittn = require('kittn');
+Slant uses JSON Web Tokens (JWT) to allow access to the API. To authenticate a request, you simply provide an access token in the request's `Authorization` header.
 
-let api = kittn.authorize('meowmeowmeow');
-```
+### Base URL
 
-> Make sure to replace `meowmeowmeow` with your API key.
+`https://api.slantreviews.com/v2`
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+### Request Headers
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+Header | Description
+--------- | -----------
+Authorization | Your access token. You must provide a token for all requests, unless otherwise noted.
 
-`Authorization: meowmeowmeow`
+There are two types of accounts that may be authenticated: *service accounts* and *user accounts*. The differences are described below.
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
+## Service accounts
 
-# Kittens
+> Note: No login is needed for service accounts.
 
-## Get All Kittens
+Service accounts are used by Slant partners and white-label customers to access certain endpoints with elevated permissions. These endpoints allow Slant partners to register new businesses, create users, view statistics, and perform other administrative tasks.
 
-```ruby
-require 'kittn'
+No login is necessary for service accounts. You are provided with a token when you register with Slant, and these tokens do not expire unless revoked.
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
+**Note:** Service account tokens are intended for server-side use only, and should be guarded carefully. These tokens should never be shared, uploaded to public repositories like GitHub, or exposed to client-facing applications!
 
-```python
-import kittn
+### Obtaining a user token
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+Service accounts always have the ability to make requests on behalf of a user, but sometimes it is necessary to to make requests directly from a client-facing application.  If this is the case, you should first consider whether it is possible to authenticate the user using their email+password as described under **User accounts**. If so, this is the preferred method. This is how the Slant web portal performs authentication, and this is how most standalone applications should work.
+
+However, there are situations where it may not be possible to ask the user to log in with a password. An example of this is when you are integrating specific Slant features into an existing web application, such as a CRM. In this case you probably perform your own authentication, and the end user may not even be aware of Slant's existence.
+
+In this case, you should retrieve a user token as shown below. The initial retrieval will be performed server-side by your service account, and then the token may be shared with the client to make requests directly to Slant's API.
+
+> To retrieve a user token using a service account token:
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
+curl "https://api.slantreviews.com/v2/users/:user_id/token"
+    -H "Authorization: SERVICE_ACCOUNT_TOKEN_HERE"
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
+> Example response:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{
+    "access_token": "12345678.aaaaaaaaa.0000000"
+}
 ```
 
-This endpoint retrieves all kittens.
+### HTTP request
 
-### HTTP Request
+`GET https://api.slantreviews.com/v2/users/:user_id/token`
 
-`GET http://example.com/api/kittens`
+### Request Parameters
 
-### Query Parameters
+Parameter | Description
+--------- | -----------
+user_id | The user's ID.
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+### Request Headers
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+Header | Description
+--------- | -----------
+Authorization | Your service account token.
 
-## Get a Specific Kitten
+<aside class="warning">If you believe that your service account token may have been compromised or exposed to the public, please contact Slant immediately to reset your token!</aside>
 
-```ruby
-require 'kittn'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
+## User accounts
 
-```python
-import kittn
+As the name suggests, user accounts are used by individual end users. These may be business owners, employees, or other people who have been given access to a company's Slant account (or white label equivalent).
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+A user may obtain a token by providing an email + password combo the the API, which will then return an access token if the credentials are valid.
+
+### HTTP request
+
+> To log in a user using email and password:
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
+curl "https://api.slantreviews.com/v2/auth/login"
+    -X POST
+    -d '{"email": "USER_EMAIL", "password": "USER_PASSWORD"}'
 ```
 
-```javascript
-const kittn = require('kittn');
+> Example response:
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+```json
+{
+    "access_token": "12345678.aaaaaaaaa.0000000"
+}
+```
+
+`POST https://api.slantreviews.com/v2/auth/login`
+
+### Body Parameters
+
+Parameter | Description
+--------- | -----------
+email | The user's email address.
+password | The password provided by the user.
+
+<aside class="success">This is the "standard" login method used by Slant. If you are building your own application, you should use this when possible.</aside>
+
+
+# Users
+
+## Get the current user
+
+```shell
+curl "https://api.slantreviews.com/v2/users/me"
+  -H "Authorization: USER_TOKEN_HERE"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+    "id": "00000000-0000-0000-0000-000000000000",
+    "first_name": "Bob",
+    "last_name": "User",
+    "email": "bob@example.com",
+    "locations": [
+        {
+            "id": "00000000-0000-0000-0000-000000000000",
+            "company_id": "00000000-0000-0000-0000-000000000000",
+            "name": "Nom Nom - Center Street",
+            "phone": "+18015556666",
+            "client_role": "admin",
+            "address": {
+                "state": "UT",
+                "city": "Provo",
+                "address_1": "123 Center Street",
+                "address_2": "Ste 2",
+                "zip": "84604"
+            }
+        }
+    ]
 }
 ```
 
-This endpoint retrieves a specific kitten.
+This endpoint retrieves details for the currently-authenticated user.
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+For most applications, this is the first endpoint that should called after a successful login. It will return basic information about the authenticated user, as well as a list of locations that the user is authorized to access.
 
-### HTTP Request
+Accessible only to user accounts.
 
-`GET http://example.com/kittens/<ID>`
+### HTTP request
 
-### URL Parameters
+`GET https://api.slantreviews.com/v2/users/me`
+
+### Request headers
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
+Authorization | The user's access token.
 
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
+## Get a specific user
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
+curl "https://api.slantreviews.com/v2/users/:user_id"
+  -H "Authorization: ACCESS_TOKEN_HERE"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "deleted" : ":("
+    "id": "00000000-0000-0000-0000-000000000000",
+    "first_name": "Bob",
+    "last_name": "User",
+    "email": "bob@example.com",
+    "locations": [
+        {
+            "id": "00000000-0000-0000-0000-000000000000",
+            "company_id": "00000000-0000-0000-0000-000000000000",
+            "name": "Nom Nom - Center Street",
+            "phone": "+18015556666",
+            "client_role": "admin",
+            "address": {
+                "state": "UT",
+                "city": "Provo",
+                "address_1": "123 Center Street",
+                "address_2": "Ste 2",
+                "zip": "84604"
+            }
+        }
+    ]
 }
 ```
 
-This endpoint retrieves a specific kitten.
+This endpoint retrieves a specific user.
 
-### HTTP Request
+This endpoint is accessible to user accounts and service accounts.
 
-`DELETE http://example.com/kittens/<ID>`
+### HTTP request
 
-### URL Parameters
+`GET https://api.slantreviews.com/v2/users/:user_id`
+
+### Request Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to delete
+user_id | The user's ID.
+
 
