@@ -41,7 +41,7 @@ Slant uses JSON Web Tokens (JWT) to allow access to the API. To authenticate a r
 
 `https://api.slantreviews.com/v2`
 
-### Request Headers
+### Request headers
 
 Header | Description
 --------- | -----------
@@ -86,20 +86,19 @@ curl "https://api.slantreviews.com/v2/users/:user_id/token"
 
 `GET https://api.slantreviews.com/v2/users/:user_id/token`
 
-### Request Parameters
+### Request parameters
 
 Parameter | Description
 --------- | -----------
 user_id | The user's ID.
 
-### Request Headers
+### Request headers
 
 Header | Description
 --------- | -----------
 Authorization | Your service account token.
 
 <aside class="warning">If you believe that your service account token may have been compromised or exposed to the public, please contact Slant immediately to reset your token!</aside>
-
 
 ## User accounts
 
@@ -127,7 +126,7 @@ curl "https://api.slantreviews.com/v2/auth/login"
 
 `POST https://api.slantreviews.com/v2/auth/login`
 
-### Body Parameters
+### Body parameters
 
 Parameter | Description
 --------- | -----------
@@ -135,6 +134,56 @@ email | The user's email address.
 password | The password provided by the user.
 
 <aside class="success">This is the "standard" login method used by Slant. If you are building your own application, you should use this when possible.</aside>
+
+## User account confirmation
+
+When a new user account is created, the user is sent a confirmation email containing a unique link.  This link will direct the user to a page where they can create a password and sign in.
+
+White-label partners must build a page to handle this functionality. The link provided to the user will be formatted like this:
+
+`https://{domain}/reset/{reset_code}`
+
+where `domain` is the app domain provided when you signed up as a Slant partner. For example, native Slant users receive an email containing a link to this address:
+
+`https://app.slantreviews.com/reset/{reset_code}`
+
+where `reset_code` is a unique code used to verify the user's identity.
+
+> To confirm a user account and set a new password:
+
+```shell
+curl "https://api.slantreviews.com/v2/auth/reset/:reset_code"
+    -X POST
+    -d '{"new_password": "USER_PASSWORD"}'
+```
+
+> Example response:
+
+```json
+{
+    "access_token": "12345678.aaaaaaaaa.0000000"
+}
+```
+
+If you are developing a white-label confirmation page, this page should provide a field that asks the user to set a password. Once the user submits the password, the page should send a request to the following endpoint:
+
+### HTTP request
+
+`POST https://api.slantreviews.com/v2/auth/reset/:reset_code`
+
+### Request parameters
+
+Parameter | Description
+--------- | -----------
+reset_code | The unique reset code from the user's link. This will need to be extracted from the URL in the address bar.
+
+### Body parameters
+
+Parameter | Description
+--------- | -----------
+new_password | The new password provided by the user.
+
+If a valid reset code and an acceptable password are provided, this endpoint will return an access token. The user may then be directed to the application as they normally would after a successful login.
 
 
 # Roles
@@ -247,7 +296,7 @@ This endpoint is accessible to user accounts and service accounts.
 
 `GET https://api.slantreviews.com/v2/users/:user_id`
 
-### Request Parameters
+### Request parameters
 
 Parameter | Description
 --------- | -----------
@@ -400,7 +449,7 @@ Parameter | Description
 --------- | -----------
 location_id | The location's ID.
 
-### Body Parameters
+### Body parameters
 
 Parameter | Description
 --------- | -----------
