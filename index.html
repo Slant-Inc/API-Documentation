@@ -286,6 +286,23 @@
               </ul>
           </li>
           <li>
+            <a href="#invitations" class="toc-h1 toc-link" data-title="Invitations">Invitations</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-review-invitations-for-a-location" class="toc-h2 toc-link" data-title="Invitations">Get review invitations for a location</a>
+                  </li>
+                  <li>
+                    <a href="#send-a-review-invitation" class="toc-h2 toc-link" data-title="Invitations">Send a review invitation</a>
+                  </li>
+                  <li>
+                    <a href="#get-the-invitation-message-body" class="toc-h2 toc-link" data-title="Invitations">Get the invitation message body</a>
+                  </li>
+                  <li>
+                    <a href="#modify-the-invitation-message-body" class="toc-h2 toc-link" data-title="Invitations">Modify the invitation message body</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#members" class="toc-h1 toc-link" data-title="Members">Members</a>
               <ul class="toc-list-h2">
                   <li>
@@ -662,6 +679,172 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
+<h1 id='invitations'>Invitations</h1>
+<p>One of the primary functionalities of Slant is the ability to send review invitations. These invitations are sent to customers via SMS text message, and assist them with the process of leaving a review for the business.</p>
+<h2 id='get-review-invitations-for-a-location'>Get review invitations for a location</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/locations/:location_id/review_invitations"</span>
+    -H <span class="s2">"Authorization: ACCESS_TOKEN_HERE"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"TODO"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DISPLAY EXAMPLE RESPONSE HERE"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint retrieves an array of all review invitations that have been sent by a location. This allows a business to review their customer history, and resend invitations if desired.</p>
+
+<p>Accessible to user accounts and service accounts.</p>
+<h3 id='http-request-8'>HTTP request</h3>
+<p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_invitations</code></p>
+<h3 id='request-parameters-6'>Request parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>location_id</td>
+<td>The location&#39;s ID.</td>
+</tr>
+</tbody></table>
+<h2 id='send-a-review-invitation'>Send a review invitation</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/locations/:location_id/review_invitations"</span>
+    -X POST
+    -d <span class="s1">'{"to_number": "PHONE_NUMBER", "to_name": "CUSTOMER_NAME"}'</span>
+    -H <span class="s2">"Authorization: ACCESS_TOKEN_HERE"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"TODO"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DISPLAY EXAMPLE RESPONSE HERE"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint sends a new review invitation to a customer.</p>
+
+<p>When sending an invitation, the customer&#39;s phone number must be included but their name is optional.  Phone numbers must be a minimum of 10 digits (including area code). If a country code is not included, it is assumed to be a United States number (+1). Any format is acceptable, as all non-numerical characters will be removed.</p>
+<h3 id='http-request-9'>HTTP request</h3>
+<p><code>POST https://api.slantreviews.com/v2/locations/:location_id/review_invitations</code></p>
+<h3 id='request-parameters-7'>Request parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>location_id</td>
+<td>The location&#39;s ID.</td>
+</tr>
+</tbody></table>
+<h3 id='body-parameters-3'>Body parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>to_number</td>
+<td>The customer&#39;s phone number. Minimum 10 digits, any format.</td>
+</tr>
+<tr>
+<td>to_name</td>
+<td>(Optional) The customer&#39;s first name.</td>
+</tr>
+</tbody></table>
+<h2 id='get-the-invitation-message-body'>Get the invitation message body</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/locations/:location_id/review_invitation_body"</span>
+    -H <span class="s2">"Authorization: ACCESS_TOKEN_HERE"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"TODO"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DISPLAY EXAMPLE RESPONSE HERE"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint allows a location to view the message body that is sent to customers via SMS.</p>
+
+<p>There are two types of message body, which are detailed below. See <a href="#modify-the-invitation-message-body">Modify the invitation message body</a>.</p>
+<h3 id='http-request-10'>HTTP request</h3>
+<p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_invitation_body</code></p>
+<h3 id='request-parameters-8'>Request parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>location_id</td>
+<td>The location&#39;s ID.</td>
+</tr>
+</tbody></table>
+<h2 id='modify-the-invitation-message-body'>Modify the invitation message body</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/locations/:location_id/review_invitation_body"</span>
+    -X PATCH
+    -d <span class="s1">'{"primary": "PRIMARY_MESSAGE_BODY", "fallback": "FALLBACK_MESSAGE_BODY"}'</span>
+    -H <span class="s2">"Authorization: ACCESS_TOKEN_HERE"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"TODO"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DISPLAY EXAMPLE RESPONSE HERE"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint allows a location to customize the text message that is sent to customers via SMS.</p>
+
+<p>There are two types of message body, referred to here as  <strong>primary</strong> and <strong>fallback</strong>:</p>
+<h3 id='primary-message-body'>Primary message body</h3>
+<p>This is the message that will be sent to customers when a name is included in the request (recommended). An example is shown below:</p>
+
+<p><code>&quot;Hi {{NAME}}, thanks for choosing XYZ Auto Repair! Do you mind taking a moment to leave us a review? This link makes it easy: {{LINK}}&quot;</code></p>
+
+<p>Note the usage of mustache-style placeholders in this example body: <code>{{NAME}}</code> and <code>{{LINK}}</code>.  When an invitation is sent, these placeholders will be replaced with the customer&#39;s provided name and a unique link to leave a review.</p>
+
+<aside class="notice">It is important that the primary message body include BOTH mustache placeholders shown above. If they are not included, the message will be considered invalid and a default message body will be sent.</aside>
+<h3 id='fallback-message-body'>Fallback message body</h3>
+<p>This is the message that will be sent when the customer&#39;s name is not provided.  An example is shown below:</p>
+
+<p><code>&quot;Hi there! Thanks for choosing XYZ Auto Repair! Do you mind taking a moment to leave us a review? This link makes it easy: {{LINK}}&quot;</code></p>
+
+<p>Note that the fallback message body does not include a <code>{{NAME}}</code> placeholder, but still includes <code>{{LINK}}</code>.</p>
+
+<aside class="notice">It is important that the fallback message body includes a link placeholder, but NOT a name placeholder. If it does not follow this format, the message will be considered invalid and a default message body will be sent.</aside>
+<h3 id='http-request-11'>HTTP request</h3>
+<p><code>PATCH https://api.slantreviews.com/v2/locations/:location_id/review_invitation_body</code></p>
+<h3 id='request-parameters-9'>Request parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>location_id</td>
+<td>The location&#39;s ID.</td>
+</tr>
+</tbody></table>
+<h3 id='body-parameters-4'>Body parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>primary</td>
+<td>(Optional) The new primary message body.</td>
+</tr>
+<tr>
+<td>fallback</td>
+<td>(Optional) The new fallback message body.</td>
+</tr>
+</tbody></table>
+
+<p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
+
+<aside class="success">This PATCH endpoint allows one or both message bodies to be updated in a single request. If one is omitted, the existing value will be maintained.</aside>
 <h1 id='members'>Members</h1><h2 id='get-members-for-a-location'>Get members for a location</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/locations/:location_id/members"</span>
     -H <span class="s2">"Authorization: ACCESS_TOKEN_HERE"</span>
 </code></pre>
@@ -675,9 +858,9 @@
 <p>This endpoint retrieves an array of all members and admins who are authorized for a specific location.</p>
 
 <p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-8'>HTTP request</h3>
+<h3 id='http-request-12'>HTTP request</h3>
 <p><code>GET https://&#39;api.slantreviews.com/v2/locations/:location_id/members</code></p>
-<h3 id='request-parameters-6'>Request parameters</h3>
+<h3 id='request-parameters-10'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -708,9 +891,9 @@
 <p>If the user does not yet exist, a new account is created automatically and granted access to this location.  A confirmation email is sent to the provided address, which will allow the user to confirm their address, set a password and log in.</p>
 
 <p>Changing a user account&#39;s own role is not allowed.</p>
-<h3 id='http-request-9'>HTTP request</h3>
+<h3 id='http-request-13'>HTTP request</h3>
 <p><code>POST https://api.slantreviews.com/v2/locations/:location_id/members</code></p>
-<h3 id='request-parameters-7'>Request parameters</h3>
+<h3 id='request-parameters-11'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -722,7 +905,7 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
-<h3 id='body-parameters-3'>Body parameters</h3>
+<h3 id='body-parameters-5'>Body parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -762,9 +945,9 @@
 <p>This endpoint revokes a user&#39;s role (as a member or admin) from a location.</p>
 
 <p>Attempting to revoke a user account&#39;s own role is not allowed.</p>
-<h3 id='http-request-10'>HTTP request</h3>
+<h3 id='http-request-14'>HTTP request</h3>
 <p><code>DELETE https://api.slantreviews.com/v2/locations/:location_id/members/:user_id</code></p>
-<h3 id='request-parameters-8'>Request parameters</h3>
+<h3 id='request-parameters-12'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
