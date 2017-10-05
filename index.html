@@ -688,9 +688,33 @@
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"TODO"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DISPLAY EXAMPLE RESPONSE HERE"</span><span class="w">
+    </span><span class="s2">"review_invitations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RFyQV0"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"client_number_e164"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+15556667777"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"client_number_natural"</span><span class="p">:</span><span class="w"> </span><span class="s2">"(555) 666-7777"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"client_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bob"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"date_sent"</span><span class="p">:</span><span class="w"> </span><span class="mf">1507201073.95566</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"date_clicked"</span><span class="p">:</span><span class="w"> </span><span class="mf">1507201143.24624</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"recommended"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"rating_date"</span><span class="p">:</span><span class="w"> </span><span class="mf">1507201176.56359</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"feedback_body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This restaurant isn't very good. I will not be returning."</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"feedback_date"</span><span class="p">:</span><span class="w"> </span><span class="mf">1507201264.92683</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GvwN58"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"client_number_e164"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+16667778888"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"client_number_natural"</span><span class="p">:</span><span class="w"> </span><span class="s2">"(666) 777-8888"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"client_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="w">
+            </span><span class="s2">"date_sent"</span><span class="p">:</span><span class="w"> </span><span class="mf">1507201066.95727</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<blockquote>
+<p>Note: <code>&quot;date_clicked&quot;</code>, <code>&quot;recommended&quot;</code>, <code>&quot;rating_date&quot;</code>, <code>&quot;feedback_body&quot;</code> and <code>&quot;feedback_date&quot;</code> are all optional, and will only be returned if the customer has completed those steps in the review process.</p>
+</blockquote>
+
 <p>This endpoint retrieves an array of all review invitations that have been sent by a location. This allows a business to review their customer history, and resend invitations if desired.</p>
 
 <p>Accessible to user accounts and service accounts.</p>
