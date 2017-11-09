@@ -286,6 +286,20 @@
               </ul>
           </li>
           <li>
+            <a href="#review-accounts" class="toc-h1 toc-link" data-title="Review Accounts">Review Accounts</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-linked-review-accounts-for-a-location" class="toc-h2 toc-link" data-title="Review Accounts">Get linked review accounts for a location</a>
+                  </li>
+                  <li>
+                    <a href="#link-a-new-review-account" class="toc-h2 toc-link" data-title="Review Accounts">Link a new review account</a>
+                  </li>
+                  <li>
+                    <a href="#delete-a-review-account" class="toc-h2 toc-link" data-title="Review Accounts">Delete a review account</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#invitations" class="toc-h1 toc-link" data-title="Invitations">Invitations</a>
               <ul class="toc-list-h2">
                   <li>
@@ -652,7 +666,11 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
-<h1 id='reviews'>Reviews</h1><h2 id='get-reviews-for-a-location'>Get reviews for a location</h2><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/locations/:location_id/reviews"</span>
+<h1 id='reviews'>Reviews</h1><h2 id='get-reviews-for-a-location'>Get reviews for a location</h2>
+<blockquote>
+<p>To fetch all reviews:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/locations/:location_id/reviews"</span>
     -H <span class="s2">"Authorization: ACCESS_TOKEN_HERE"</span>
 </code></pre>
 <blockquote>
@@ -677,6 +695,167 @@
 <tr>
 <td>location_id</td>
 <td>The location&#39;s ID.</td>
+</tr>
+</tbody></table>
+<h1 id='review-accounts'>Review Accounts</h1><h2 id='get-linked-review-accounts-for-a-location'>Get linked review accounts for a location</h2>
+<blockquote>
+<p>To fetch all linked review accounts:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/locations/:location_id/review_accounts"</span>
+    -H <span class="s2">"Authorization: ACCESS_TOKEN_HERE"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"available_sites"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3b5998"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Facebook"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"icon_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://facebook_icon_url"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"google"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3cba54"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Google"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"icon_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://google_icon_url"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yelp"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c41200"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Yelp"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"icon_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://yelp_icon_url"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"linked_accounts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"site"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"facebook"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3b5998"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Facebook"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"icon_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://facebook_icon_url"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"order"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.facebook.com/business_name"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"response_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.facebook.com/business_name/reviews"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"total_reviews"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"average_rating"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.4</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"site"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"google"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3cba54"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Google"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"icon_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://google_icon_url"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"order"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.google.com/maps/place/business_address"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"response_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.google.com/search?q=business_address"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"total_reviews"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"average_rating"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.6</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint retrieves an array of all review accounts currently linked to a location, as well as a list of available sites that may be linked.</p>
+
+<p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
+<h3 id='http-request-8'>HTTP request</h3>
+<p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_accounts</code></p>
+<h3 id='request-parameters-6'>Request parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>location_id</td>
+<td>The location&#39;s ID.</td>
+</tr>
+</tbody></table>
+<h2 id='link-a-new-review-account'>Link a new review account</h2>
+<blockquote>
+<p>To link a new review account:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/auth/login"</span>
+    -X POST
+    -d <span class="s1">'{"site_id": "REVIEW_SITE_ID", "url": "REVIEW_ACCOUNT_URL"}'</span>
+    -H <span class="s2">"Authorization: ACCESS_TOKEN_HERE"</span>
+</code></pre>
+<blockquote>
+<p>Note: If successful, the above command returns an updated list of review accounts for the location. See endpoint to GET review accounts above.</p>
+</blockquote>
+
+<p>This endpoint allows a location to link a new review account for their business.</p>
+
+<p>Linking is performed by selecting a valid site and submitting the URL from the location&#39;s review account on that site. Please note that the review site must be one of the <code>available_sites</code> returned  by <code>GET review accounts</code> above.</p>
+
+<p><strong>Example:</strong>  Nom Nom Foods has a Facebook review page located at <code>https://www.facebook.com/pg/nomnomfoodtrucks/reviews/</code>. In order to link this account to Slant, a POST would be submitted to this endpoint where the request body looks like this:</p>
+
+<p><code>{&quot;site_id&quot;: &quot;facebook&quot;, &quot;url&quot;: &quot;https://www.facebook.com/pg/nomnomfoodtrucks/reviews/&quot;}</code></p>
+
+<p><strong>Note:</strong> Upon successfully linking an account, this endpoint returns an updated list of <em>all</em> review accounts linked to this location, as well as an updated list of available sites.</p>
+
+<p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
+<h3 id='http-request-9'>HTTP request</h3>
+<p><code>POST https://api.slantreviews.com/v2/locations/:location_id/review_accounts</code></p>
+<h3 id='request-parameters-7'>Request parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>location_id</td>
+<td>The location&#39;s ID.</td>
+</tr>
+</tbody></table>
+<h3 id='body-parameters-3'>Body parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>site_id</td>
+<td>The ID of the review site being linked. This must be an ID from one of the available sites returned by <code>GET review accounts</code>.</td>
+</tr>
+<tr>
+<td>url</td>
+<td>The URL pointing to the location&#39;s review page on this site.</td>
+</tr>
+</tbody></table>
+<h2 id='delete-a-review-account'>Delete a review account</h2><pre class="highlight shell tab-shell"><code>    curl <span class="s2">"https://api.slantreviews.com/v2/locations/:location_id/review_accounts/:site_id"</span>
+    -X DELETE
+    -H <span class="s2">"Authorization: ACCESS_TOKEN_HERE"</span>
+</code></pre>
+<blockquote>
+<p>Note: If successful, the above command returns an updated list of review accounts for the location. See endpoint to GET review accounts above.</p>
+</blockquote>
+
+<p>This endpoint allows a location to un-link a review account from Slant.</p>
+
+<p><strong>Note:</strong> After successfully un-linking an account, this endpoint returns an updated list of <em>all</em> review accounts linked to this location, as well as an updated list of available sites.</p>
+<h3 id='http-request-10'>HTTP request</h3>
+<p><code>DELETE https://api.slantreviews.com/v2/locations/:location_id/review_accounts/:site_id</code></p>
+<h3 id='request-parameters-8'>Request parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>location_id</td>
+<td>The location&#39;s ID.</td>
+</tr>
+<tr>
+<td>site_id</td>
+<td>The ID of the review site to un-link. Must be a site from a review account currently linked to this location.</td>
 </tr>
 </tbody></table>
 <h1 id='invitations'>Invitations</h1>
@@ -718,9 +897,9 @@
 <p>This endpoint retrieves an array of all review invitations that have been sent by a location. This allows a business to review their customer history, and resend invitations if desired.</p>
 
 <p>Accessible to user accounts and service accounts.</p>
-<h3 id='http-request-8'>HTTP request</h3>
+<h3 id='http-request-11'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_invitations</code></p>
-<h3 id='request-parameters-6'>Request parameters</h3>
+<h3 id='request-parameters-9'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -747,9 +926,9 @@
 <p>This endpoint sends a new review invitation to a customer.</p>
 
 <p>When sending an invitation, the customer&#39;s phone number must be included but their name is optional.  Phone numbers must be a minimum of 10 digits (including area code). If a country code is not included, it is assumed to be a United States number (+1). Any format is acceptable, as all non-numerical characters will be removed.</p>
-<h3 id='http-request-9'>HTTP request</h3>
+<h3 id='http-request-12'>HTTP request</h3>
 <p><code>POST https://api.slantreviews.com/v2/locations/:location_id/review_invitations</code></p>
-<h3 id='request-parameters-7'>Request parameters</h3>
+<h3 id='request-parameters-10'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -761,7 +940,7 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
-<h3 id='body-parameters-3'>Body parameters</h3>
+<h3 id='body-parameters-4'>Body parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -790,9 +969,9 @@
 <p>This endpoint allows a location to view the message body that is sent to customers via SMS.</p>
 
 <p>There are two types of message body, which are detailed below. See <a href="#modify-the-invitation-message-body">Modify the invitation message body</a>.</p>
-<h3 id='http-request-10'>HTTP request</h3>
+<h3 id='http-request-13'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_invitation_body</code></p>
-<h3 id='request-parameters-8'>Request parameters</h3>
+<h3 id='request-parameters-11'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -835,9 +1014,9 @@
 <p>Note that the fallback message body does not include a <code>{{NAME}}</code> placeholder, but still includes <code>{{LINK}}</code>.</p>
 
 <aside class="notice">It is important that the fallback message body includes a link placeholder, but NOT a name placeholder. If it does not follow this format, the message will be considered invalid and a default message body will be sent.</aside>
-<h3 id='http-request-11'>HTTP request</h3>
+<h3 id='http-request-14'>HTTP request</h3>
 <p><code>PATCH https://api.slantreviews.com/v2/locations/:location_id/review_invitation_body</code></p>
-<h3 id='request-parameters-9'>Request parameters</h3>
+<h3 id='request-parameters-12'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -849,7 +1028,7 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
-<h3 id='body-parameters-4'>Body parameters</h3>
+<h3 id='body-parameters-5'>Body parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -882,9 +1061,9 @@
 <p>This endpoint retrieves an array of all members and admins who are authorized for a specific location.</p>
 
 <p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-12'>HTTP request</h3>
+<h3 id='http-request-15'>HTTP request</h3>
 <p><code>GET https://&#39;api.slantreviews.com/v2/locations/:location_id/members</code></p>
-<h3 id='request-parameters-10'>Request parameters</h3>
+<h3 id='request-parameters-13'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -915,9 +1094,9 @@
 <p>If the user does not yet exist, a new account is created automatically and granted access to this location.  A confirmation email is sent to the provided address, which will allow the user to confirm their address, set a password and log in.</p>
 
 <p>Changing a user account&#39;s own role is not allowed.</p>
-<h3 id='http-request-13'>HTTP request</h3>
+<h3 id='http-request-16'>HTTP request</h3>
 <p><code>POST https://api.slantreviews.com/v2/locations/:location_id/members</code></p>
-<h3 id='request-parameters-11'>Request parameters</h3>
+<h3 id='request-parameters-14'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -929,7 +1108,7 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
-<h3 id='body-parameters-5'>Body parameters</h3>
+<h3 id='body-parameters-6'>Body parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -969,9 +1148,9 @@
 <p>This endpoint revokes a user&#39;s role (as a member or admin) from a location.</p>
 
 <p>Attempting to revoke a user account&#39;s own role is not allowed.</p>
-<h3 id='http-request-14'>HTTP request</h3>
+<h3 id='http-request-17'>HTTP request</h3>
 <p><code>DELETE https://api.slantreviews.com/v2/locations/:location_id/members/:user_id</code></p>
-<h3 id='request-parameters-12'>Request parameters</h3>
+<h3 id='request-parameters-15'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
