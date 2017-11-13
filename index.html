@@ -278,6 +278,14 @@
               </ul>
           </li>
           <li>
+            <a href="#feedback" class="toc-h1 toc-link" data-title="Feedback">Feedback</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-private-feedback-for-a-location" class="toc-h2 toc-link" data-title="Feedback">Get private feedback for a location</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#reviews" class="toc-h1 toc-link" data-title="Reviews">Reviews</a>
               <ul class="toc-list-h2">
                   <li>
@@ -666,6 +674,37 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
+<h1 id='feedback'>Feedback</h1><h2 id='get-private-feedback-for-a-location'>Get private feedback for a location</h2>
+<blockquote>
+<p>To fetch all feedback:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/locations/:location_id/feedback"</span>
+    -H <span class="s2">"Authorization: ACCESS_TOKEN_HERE"</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"TODO"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DISPLAY EXAMPLE RESPONSE HERE"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint retrieves an array of all private feedback for a location.</p>
+
+<p>Accessible to user accounts where the user is authorized as a member or admin of this location. Accessible to service accounts.</p>
+<h3 id='http-request-7'>HTTP request</h3>
+<p><code>GET https://api.slantreviews.com/v2/locations/:location_id/feedback</code></p>
+<h3 id='request-parameters-5'>Request parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>location_id</td>
+<td>The location&#39;s ID.</td>
+</tr>
+</tbody></table>
 <h1 id='reviews'>Reviews</h1><h2 id='get-reviews-for-a-location'>Get reviews for a location</h2>
 <blockquote>
 <p>To fetch all reviews:</p>
@@ -683,9 +722,9 @@
 <p>This endpoint retrieves an array of all online reviews for a location.</p>
 
 <p>Accessible to user accounts where the user is authorized as a member or admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-7'>HTTP request</h3>
-<p><code>GET https://&#39;api.slantreviews.com/v2/locations/:location_id/reviews</code></p>
-<h3 id='request-parameters-5'>Request parameters</h3>
+<h3 id='http-request-8'>HTTP request</h3>
+<p><code>GET https://api.slantreviews.com/v2/locations/:location_id/reviews</code></p>
+<h3 id='request-parameters-6'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -761,9 +800,9 @@
 <p>This endpoint retrieves an array of all review accounts currently linked to a location, as well as a list of available sites that may be linked.</p>
 
 <p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-8'>HTTP request</h3>
+<h3 id='http-request-9'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_accounts</code></p>
-<h3 id='request-parameters-6'>Request parameters</h3>
+<h3 id='request-parameters-7'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -799,9 +838,9 @@
 <p><strong>Note:</strong> Upon successfully linking an account, this endpoint returns an updated list of <em>all</em> review accounts linked to this location, as well as an updated list of available sites.</p>
 
 <p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-9'>HTTP request</h3>
+<h3 id='http-request-10'>HTTP request</h3>
 <p><code>POST https://api.slantreviews.com/v2/locations/:location_id/review_accounts</code></p>
-<h3 id='request-parameters-7'>Request parameters</h3>
+<h3 id='request-parameters-8'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -840,9 +879,9 @@
 <p>This endpoint allows a location to un-link a review account from Slant.</p>
 
 <p><strong>Note:</strong> After successfully un-linking an account, this endpoint returns an updated list of <em>all</em> review accounts linked to this location, as well as an updated list of available sites.</p>
-<h3 id='http-request-10'>HTTP request</h3>
+<h3 id='http-request-11'>HTTP request</h3>
 <p><code>DELETE https://api.slantreviews.com/v2/locations/:location_id/review_accounts/:site_id</code></p>
-<h3 id='request-parameters-8'>Request parameters</h3>
+<h3 id='request-parameters-9'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -897,9 +936,9 @@
 <p>This endpoint retrieves an array of all review invitations that have been sent by a location. This allows a business to review their customer history, and resend invitations if desired.</p>
 
 <p>Accessible to user accounts and service accounts.</p>
-<h3 id='http-request-11'>HTTP request</h3>
+<h3 id='http-request-12'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_invitations</code></p>
-<h3 id='request-parameters-9'>Request parameters</h3>
+<h3 id='request-parameters-10'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -926,9 +965,9 @@
 <p>This endpoint sends a new review invitation to a customer.</p>
 
 <p>When sending an invitation, the customer&#39;s phone number must be included but their name is optional.  Phone numbers must be a minimum of 10 digits (including area code). If a country code is not included, it is assumed to be a United States number (+1). Any format is acceptable, as all non-numerical characters will be removed.</p>
-<h3 id='http-request-12'>HTTP request</h3>
+<h3 id='http-request-13'>HTTP request</h3>
 <p><code>POST https://api.slantreviews.com/v2/locations/:location_id/review_invitations</code></p>
-<h3 id='request-parameters-10'>Request parameters</h3>
+<h3 id='request-parameters-11'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -969,9 +1008,9 @@
 <p>This endpoint allows a location to view the message body that is sent to customers via SMS.</p>
 
 <p>There are two types of message body, which are detailed below. See <a href="#modify-the-invitation-message-body">Modify the invitation message body</a>.</p>
-<h3 id='http-request-13'>HTTP request</h3>
+<h3 id='http-request-14'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_invitation_body</code></p>
-<h3 id='request-parameters-11'>Request parameters</h3>
+<h3 id='request-parameters-12'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1014,9 +1053,9 @@
 <p>Note that the fallback message body does not include a <code>{{NAME}}</code> placeholder, but still includes <code>{{LINK}}</code>.</p>
 
 <aside class="notice">It is important that the fallback message body includes a link placeholder, but NOT a name placeholder. If it does not follow this format, the message will be considered invalid and a default message body will be sent.</aside>
-<h3 id='http-request-14'>HTTP request</h3>
+<h3 id='http-request-15'>HTTP request</h3>
 <p><code>PATCH https://api.slantreviews.com/v2/locations/:location_id/review_invitation_body</code></p>
-<h3 id='request-parameters-12'>Request parameters</h3>
+<h3 id='request-parameters-13'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1061,9 +1100,9 @@
 <p>This endpoint retrieves an array of all members and admins who are authorized for a specific location.</p>
 
 <p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-15'>HTTP request</h3>
+<h3 id='http-request-16'>HTTP request</h3>
 <p><code>GET https://&#39;api.slantreviews.com/v2/locations/:location_id/members</code></p>
-<h3 id='request-parameters-13'>Request parameters</h3>
+<h3 id='request-parameters-14'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1094,9 +1133,9 @@
 <p>If the user does not yet exist, a new account is created automatically and granted access to this location.  A confirmation email is sent to the provided address, which will allow the user to confirm their address, set a password and log in.</p>
 
 <p>Changing a user account&#39;s own role is not allowed.</p>
-<h3 id='http-request-16'>HTTP request</h3>
+<h3 id='http-request-17'>HTTP request</h3>
 <p><code>POST https://api.slantreviews.com/v2/locations/:location_id/members</code></p>
-<h3 id='request-parameters-14'>Request parameters</h3>
+<h3 id='request-parameters-15'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1148,9 +1187,9 @@
 <p>This endpoint revokes a user&#39;s role (as a member or admin) from a location.</p>
 
 <p>Attempting to revoke a user account&#39;s own role is not allowed.</p>
-<h3 id='http-request-17'>HTTP request</h3>
+<h3 id='http-request-18'>HTTP request</h3>
 <p><code>DELETE https://api.slantreviews.com/v2/locations/:location_id/members/:user_id</code></p>
-<h3 id='request-parameters-15'>Request parameters</h3>
+<h3 id='request-parameters-16'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
