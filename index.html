@@ -239,6 +239,12 @@
                   <li>
                     <a href="#user-account-confirmation" class="toc-h2 toc-link" data-title="Authentication">User account confirmation</a>
                   </li>
+                  <li>
+                    <a href="#requesting-a-password-reset-non-authenticated" class="toc-h2 toc-link" data-title="Authentication">Requesting a password reset (non-authenticated)</a>
+                  </li>
+                  <li>
+                    <a href="#resetting-a-password-for-a-user-authenticated" class="toc-h2 toc-link" data-title="Authentication">Resetting a password for a user (authenticated)</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -478,18 +484,6 @@
 
 <aside class="success">This is the "standard" login method used by Slant. If you are building your own application, you should use this when possible.</aside>
 <h2 id='user-account-confirmation'>User account confirmation</h2>
-<p>When a new user account is created, the user is sent a confirmation email containing a unique link.  This link will direct the user to a page where they can create a password and sign in.</p>
-
-<p>White-label partners must build a page to handle this functionality. The link provided to the user will be formatted like this:</p>
-
-<p><code>https://{domain}/reset/{reset_code}</code></p>
-
-<p>where <code>domain</code> is the app domain provided when you signed up as a Slant partner. For example, native Slant users receive an email containing a link to this address:</p>
-
-<p><code>https://app.slantreviews.com/reset/{reset_code}</code></p>
-
-<p>where <code>reset_code</code> is a unique code used to verify the user&#39;s identity.</p>
-
 <blockquote>
 <p>To confirm a user account and set a new password:</p>
 </blockquote>
@@ -504,6 +498,18 @@
     </span><span class="s2">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678.aaaaaaaaa.0000000"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p>When a new user account is created or a password reset is requested, the user is sent a confirmation email containing a unique link.  This link will direct the user to a page where they can create a password and sign in.</p>
+
+<p>White-label partners must build a page to handle this functionality. The link provided to the user will be formatted like this:</p>
+
+<p><code>https://{domain}/reset/{reset_code}?email={user_email}</code></p>
+
+<p>where <code>domain</code> is the app domain provided when you signed up as a Slant partner and <code>user_email</code>  is the user&#39;s email address.  For example, native Slant users receive an email containing a link to this address:</p>
+
+<p><code>https://app.slantreviews.com/reset/{reset_code}?email=example@example.com</code></p>
+
+<p>where <code>reset_code</code> is a unique code used to verify the user&#39;s identity.</p>
+
 <p>If you are developing a white-label confirmation page, this page should provide a field that asks the user to set a password. Once the user submits the password, the page should send a request to the following endpoint:</p>
 <h3 id='http-request-3'>HTTP request</h3>
 <p><code>POST https://api.slantreviews.com/v2/auth/reset/:reset_code</code></p>
@@ -533,6 +539,94 @@
 </tbody></table>
 
 <p>If a valid reset code and an acceptable password are provided, this endpoint will return an access token. The user may then be directed to the application as they normally would after a successful login.</p>
+<h2 id='requesting-a-password-reset-non-authenticated'>Requesting a password reset (non-authenticated)</h2>
+<blockquote>
+<p>To request a password reset link via email:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>    curl <span class="s2">"https://api.slantreviews.com/v2/auth/reset_link"</span>
+    -X POST
+    -d <span class="s1">'{"email": "USER_EMAIL", "domain": "APP_DOMAIN"}'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Password reset link sent."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>If a user forgets their password, they may request a password reset by confirming their email address.  A unique link is then sent to their inbox which allows them to set a new password.</p>
+
+<p>Since the user is not authenticated during this process, this endpoint requires the <code>domain</code> to be sent along with the user&#39;s email address.  This allows the Slant API to identify when the user is sending the request from a white-label application, and maintain consistent branding in the email that is sent.</p>
+
+<p>For white-label appliations, the <code>domain</code> should be extracted from the page&#39;s URL.  For example, if the user is visiting <code>https://app.slantreviews.com/login</code> and wishes to reset their password, the <code>domain</code> would be <code>app.slantreviews.com</code>.</p>
+
+<p>Once the user receives the unique confirmation link, the remainder of the process is identical to when their account was first created.  See <a href="#user-account-confirmation">User account confirmation</a>.</p>
+
+<p><strong>Important:</strong> This endpoint should only be used for <em>non-authenticated</em> password resets (i.e. when a user forgets their password).  To reset a user&#39;s password while currently signed in, see <a href="#resetting-a-password-for-a-user-authenticated">Resetting a password for a user (authenticated)</a>.</p>
+<h3 id='http-request-4'>HTTP request</h3>
+<p><code>POST https://api.slantreviews.com/v2/auth/reset_link</code></p>
+<h3 id='body-parameters-3'>Body parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>email</td>
+<td>The email address provided by the user.</td>
+</tr>
+<tr>
+<td>domain</td>
+<td>The web domain from which the user is requesting a password reset.</td>
+</tr>
+</tbody></table>
+<h2 id='resetting-a-password-for-a-user-authenticated'>Resetting a password for a user (authenticated)</h2>
+<blockquote>
+<p>To reset an authenticated user&#39;s password:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.slantreviews.com/v2/users/:user_id/password"</span>
+    -X POST
+    -d <span class="s1">'{"current_password": "USER_CURRENT_PASSWORD", "new_password": "USER_NEW_PASSWORD"}'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678.aaaaaaaaa.0000000"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>A user may choose to reset their password at any time while signed in.  They must provide their current password and a new password, with a minimum length of 6 characters.</p>
+<h3 id='http-request-5'>HTTP request</h3>
+<p><code>POST https://api.slantreviews.com/v2/users/:user_id/password</code></p>
+<h3 id='request-parameters-3'>Request parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>user_id</td>
+<td>The user&#39;s ID.</td>
+</tr>
+</tbody></table>
+<h3 id='body-parameters-4'>Body parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>current_password</td>
+<td>The user&#39;s current password.</td>
+</tr>
+<tr>
+<td>new_password</td>
+<td>The new password provided by the user.</td>
+</tr>
+</tbody></table>
 <h1 id='roles'>Roles</h1>
 <p>User accounts may be granted one of two roles when authorized for a location:</p>
 <h3 id='member'>Member</h3>
@@ -577,7 +671,7 @@
 <p>For most applications, this is the first endpoint that should called after a successful login. It will return basic information about the authenticated user, as well as a list of locations that the user is authorized to access.</p>
 
 <p>Accessible only to user accounts.</p>
-<h3 id='http-request-4'>HTTP request</h3>
+<h3 id='http-request-6'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/users/me</code></p>
 <h3 id='request-headers-3'>Request headers</h3>
 <table><thead>
@@ -623,9 +717,9 @@
 <p>This endpoint retrieves a specific user.</p>
 
 <p>This endpoint is accessible to user accounts and service accounts.</p>
-<h3 id='http-request-5'>HTTP request</h3>
+<h3 id='http-request-7'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/users/:user_id</code></p>
-<h3 id='request-parameters-3'>Request parameters</h3>
+<h3 id='request-parameters-4'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -660,9 +754,9 @@
 <p>This endpoint retrieves basic review statistics for a specific location.</p>
 
 <p>Accessible to user accounts where the user is authorized as a member or admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-6'>HTTP request</h3>
+<h3 id='http-request-8'>HTTP request</h3>
 <p><code>GET https://&#39;api.slantreviews.com/v2/locations/:location_id/stats</code></p>
-<h3 id='request-parameters-4'>Request parameters</h3>
+<h3 id='request-parameters-5'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -691,9 +785,9 @@
 <p>This endpoint retrieves an array of all private feedback for a location.</p>
 
 <p>Accessible to user accounts where the user is authorized as a member or admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-7'>HTTP request</h3>
+<h3 id='http-request-9'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/locations/:location_id/feedback</code></p>
-<h3 id='request-parameters-5'>Request parameters</h3>
+<h3 id='request-parameters-6'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -722,9 +816,9 @@
 <p>This endpoint retrieves an array of all online reviews for a location.</p>
 
 <p>Accessible to user accounts where the user is authorized as a member or admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-8'>HTTP request</h3>
+<h3 id='http-request-10'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/locations/:location_id/reviews</code></p>
-<h3 id='request-parameters-6'>Request parameters</h3>
+<h3 id='request-parameters-7'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -800,9 +894,9 @@
 <p>This endpoint retrieves an array of all review accounts currently linked to a location, as well as a list of available sites that may be linked.</p>
 
 <p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-9'>HTTP request</h3>
+<h3 id='http-request-11'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_accounts</code></p>
-<h3 id='request-parameters-7'>Request parameters</h3>
+<h3 id='request-parameters-8'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -838,9 +932,9 @@
 <p><strong>Note:</strong> Upon successfully linking an account, this endpoint returns an updated list of <em>all</em> review accounts linked to this location, as well as an updated list of available sites.</p>
 
 <p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-10'>HTTP request</h3>
+<h3 id='http-request-12'>HTTP request</h3>
 <p><code>POST https://api.slantreviews.com/v2/locations/:location_id/review_accounts</code></p>
-<h3 id='request-parameters-8'>Request parameters</h3>
+<h3 id='request-parameters-9'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -852,7 +946,7 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
-<h3 id='body-parameters-3'>Body parameters</h3>
+<h3 id='body-parameters-5'>Body parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -879,9 +973,9 @@
 <p>This endpoint allows a location to un-link a review account from Slant.</p>
 
 <p><strong>Note:</strong> After successfully un-linking an account, this endpoint returns an updated list of <em>all</em> review accounts linked to this location, as well as an updated list of available sites.</p>
-<h3 id='http-request-11'>HTTP request</h3>
+<h3 id='http-request-13'>HTTP request</h3>
 <p><code>DELETE https://api.slantreviews.com/v2/locations/:location_id/review_accounts/:site_id</code></p>
-<h3 id='request-parameters-9'>Request parameters</h3>
+<h3 id='request-parameters-10'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -936,9 +1030,9 @@
 <p>This endpoint retrieves an array of all review invitations that have been sent by a location. This allows a business to review their customer history, and resend invitations if desired.</p>
 
 <p>Accessible to user accounts and service accounts.</p>
-<h3 id='http-request-12'>HTTP request</h3>
+<h3 id='http-request-14'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_invitations</code></p>
-<h3 id='request-parameters-10'>Request parameters</h3>
+<h3 id='request-parameters-11'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -965,9 +1059,9 @@
 <p>This endpoint sends a new review invitation to a customer.</p>
 
 <p>When sending an invitation, the customer&#39;s phone number must be included but their name is optional.  Phone numbers must be a minimum of 10 digits (including area code). If a country code is not included, it is assumed to be a United States number (+1). Any format is acceptable, as all non-numerical characters will be removed.</p>
-<h3 id='http-request-13'>HTTP request</h3>
+<h3 id='http-request-15'>HTTP request</h3>
 <p><code>POST https://api.slantreviews.com/v2/locations/:location_id/review_invitations</code></p>
-<h3 id='request-parameters-11'>Request parameters</h3>
+<h3 id='request-parameters-12'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -979,7 +1073,7 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
-<h3 id='body-parameters-4'>Body parameters</h3>
+<h3 id='body-parameters-6'>Body parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1008,9 +1102,9 @@
 <p>This endpoint allows a location to view the message body that is sent to customers via SMS.</p>
 
 <p>There are two types of message body, which are detailed below. See <a href="#modify-the-invitation-message-body">Modify the invitation message body</a>.</p>
-<h3 id='http-request-14'>HTTP request</h3>
+<h3 id='http-request-16'>HTTP request</h3>
 <p><code>GET https://api.slantreviews.com/v2/locations/:location_id/review_invitation_body</code></p>
-<h3 id='request-parameters-12'>Request parameters</h3>
+<h3 id='request-parameters-13'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1053,9 +1147,9 @@
 <p>Note that the fallback message body does not include a <code>{{NAME}}</code> placeholder, but still includes <code>{{LINK}}</code>.</p>
 
 <aside class="notice">It is important that the fallback message body includes a link placeholder, but NOT a name placeholder. If it does not follow this format, the message will be considered invalid and a default message body will be sent.</aside>
-<h3 id='http-request-15'>HTTP request</h3>
+<h3 id='http-request-17'>HTTP request</h3>
 <p><code>PATCH https://api.slantreviews.com/v2/locations/:location_id/review_invitation_body</code></p>
-<h3 id='request-parameters-13'>Request parameters</h3>
+<h3 id='request-parameters-14'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1067,7 +1161,7 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
-<h3 id='body-parameters-5'>Body parameters</h3>
+<h3 id='body-parameters-7'>Body parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1100,9 +1194,9 @@
 <p>This endpoint retrieves an array of all members and admins who are authorized for a specific location.</p>
 
 <p>Accessible to user accounts where the user is authorized as an admin of this location. Accessible to service accounts.</p>
-<h3 id='http-request-16'>HTTP request</h3>
+<h3 id='http-request-18'>HTTP request</h3>
 <p><code>GET https://&#39;api.slantreviews.com/v2/locations/:location_id/members</code></p>
-<h3 id='request-parameters-14'>Request parameters</h3>
+<h3 id='request-parameters-15'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1133,9 +1227,9 @@
 <p>If the user does not yet exist, a new account is created automatically and granted access to this location.  A confirmation email is sent to the provided address, which will allow the user to confirm their address, set a password and log in.</p>
 
 <p>Changing a user account&#39;s own role is not allowed.</p>
-<h3 id='http-request-17'>HTTP request</h3>
+<h3 id='http-request-19'>HTTP request</h3>
 <p><code>POST https://api.slantreviews.com/v2/locations/:location_id/members</code></p>
-<h3 id='request-parameters-15'>Request parameters</h3>
+<h3 id='request-parameters-16'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1147,7 +1241,7 @@
 <td>The location&#39;s ID.</td>
 </tr>
 </tbody></table>
-<h3 id='body-parameters-6'>Body parameters</h3>
+<h3 id='body-parameters-8'>Body parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -1187,9 +1281,9 @@
 <p>This endpoint revokes a user&#39;s role (as a member or admin) from a location.</p>
 
 <p>Attempting to revoke a user account&#39;s own role is not allowed.</p>
-<h3 id='http-request-18'>HTTP request</h3>
+<h3 id='http-request-20'>HTTP request</h3>
 <p><code>DELETE https://api.slantreviews.com/v2/locations/:location_id/members/:user_id</code></p>
-<h3 id='request-parameters-16'>Request parameters</h3>
+<h3 id='request-parameters-17'>Request parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
